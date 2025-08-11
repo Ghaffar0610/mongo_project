@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager Backend Test Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 25px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+
+        .section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #34495e;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: 600;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .tasks-list {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #e1e5e9;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: white;
+            transition: all 0.3s;
+        }
+
+        .task-item:hover {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .task-info {
+            flex: 1;
+        }
+
+        .task-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .task-status {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-sm {
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+
+        .auth-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .auth-section h2 {
+            color: white;
+            border-bottom-color: white;
+        }
+
+        .auth-section .form-group label {
+            color: white;
+        }
+
+        .token-display {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Task Manager Backend Test</h1>
+            <p>Test all CRUD operations and authentication for your backend API</p>
+        </div>
+
+        <div class="content">
+            <!-- Authentication Section -->
+            <div class="auth-section">
+                <h2>🔐 Authentication</h2>
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" placeholder="Enter username (min 3 chars)" value="testuser">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" placeholder="Enter email" value="test@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" placeholder="Enter password (min 6 chars)" value="password123">
+                </div>
+                <button class="btn btn-success" onclick="registerUser()">📝 Register User</button>
+                <button class="btn btn-warning" onclick="loginUser()">🔑 Login User</button>
+                <button class="btn" onclick="getProfile()">👤 Get Profile</button>
+                
+                <div id="token-display" class="token-display hidden">
+                    <strong>JWT Token:</strong><br>
+                    <span id="token-text"></span>
+                </div>
+            </div>
+
+            <!-- Statistics Section -->
+            <div class="section">
+                <h2>📊 API Statistics</h2>
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-requests">0</div>
+                        <div class="stat-label">Total Requests</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="successful-requests">0</div>
+                        <div class="stat-label">Successful</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="failed-requests">0</div>
+                        <div class="stat-label">Failed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-tasks">0</div>
+                        <div class="stat-label">Total Tasks</div>
+                    </div>
+                </div>
+                <button class="btn" onclick="resetStats()">🔄 Reset Stats</button>
+            </div>
+
+            <!-- Task Management Section -->
+            <div class="section">
+                <h2>📋 Task Management</h2>
+                <div class="form-group">
+                    <label for="task-title">Task Title:</label>
+                    <input type="text" id="task-title" placeholder="Enter task title">
+                </div>
+                <button class="btn btn-success" onclick="createTask()">➕ Create Task</button>
+                <button class="btn" onclick="getTasks()">📋 Get All Tasks</button>
+                <button class="btn btn-warning" onclick="clearTasks()">🗑️ Clear All Tasks</button>
+            </div>
+
+            <!-- Task List Section -->
+            <div class="section">
+                <h2>📝 Current Tasks</h2>
+                <div id="tasks-list" class="tasks-list">
+                    <p style="text-align: center; color: #7f8c8d;">No tasks yet. Create some tasks to see them here!</p>
+                </div>
+            </div>
+
+            <!-- API Testing Section -->
+            <div class="section">
+                <h2>🧪 API Endpoint Testing</h2>
+                <div class="form-group">
+                    <label for="endpoint-url">Endpoint URL:</label>
+                    <input type="text" id="endpoint-url" placeholder="e.g., /api/tasks" value="/api/tasks">
+                </div>
+                <div class="form-group">
+                    <label for="request-method">HTTP Method:</label>
+                    <select id="request-method" style="padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;">
+                        <option value="GET">GET</option>
+                        <option value="POST">POST</option>
+                        <option value="PUT">PUT</option>
+                        <option value="DELETE">DELETE</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="request-body">Request Body (JSON):</label>
+                    <textarea id="request-body" rows="4" placeholder='{"title": "Test task"}'></textarea>
+                </div>
+                <button class="btn" onclick="testEndpoint()">🧪 Test Endpoint</button>
+            </div>
+
+            <!-- Response Section -->
+            <div class="section">
+                <h2>📤 API Response</h2>
+                <div id="response-area">
+                    <p style="text-align: center; color: #7f8c8d;">API responses will appear here...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const API_BASE_URL = 'http://localhost:5000/api';
+        const SERVER_URL = 'http://localhost:5000';
+        
+        // State
+        let authToken = localStorage.getItem('authToken') || '';
+        let currentUser = null;
+        let stats = {
+            total: 0,
+            successful: 0,
+            failed: 0,
+            tasks: 0
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStats();
+            if (authToken) {
+                showToken();
+            }
+        });
+
+        // Utility functions
+        function showStatus(message, type = 'info') {
+            const responseArea = document.getElementById('response-area');
+            const statusDiv = document.createElement('div');
+            statusDiv.className = `status ${type}`;
+            statusDiv.innerHTML = `<strong>${type.toUpperCase()}:</strong> ${message}`;
+            responseArea.appendChild(statusDiv);
+            responseArea.scrollTop = responseArea.scrollHeight;
+        }
+
+        function updateStats() {
+            document.getElementById('total-requests').textContent = stats.total;
+            document.getElementById('successful-requests').textContent = stats.successful;
+            document.getElementById('failed-requests').textContent = stats.failed;
+            document.getElementById('total-tasks').textContent = stats.tasks;
+        }
+
+        function incrementStats(success = true) {
+            stats.total++;
+            if (success) {
+                stats.successful++;
+            } else {
+                stats.failed++;
+            }
+            updateStats();
+        }
+
+        function resetStats() {
+            stats = { total: 0, successful: 0, failed: 0, tasks: 0 };
+            updateStats();
+            showStatus('Statistics reset successfully', 'success');
+        }
+
+        function showToken() {
+            document.getElementById('token-display').classList.remove('hidden');
+            document.getElementById('token-text').textContent = authToken;
+        }
+
+        function hideToken() {
+            document.getElementById('token-display').classList.add('hidden');
+        }
+
+        // Authentication functions
+        async function registerUser() {
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            if (!username || !email || !password) {
+                showStatus('Please fill in all fields', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, email, password })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    authToken = data.token;
+                    currentUser = data.user;
+                    localStorage.setItem('authToken', authToken);
+                    showToken();
+                    showStatus(`User registered successfully! Welcome ${data.user.username}`, 'success');
+                    incrementStats(true);
+                } else {
+                    showStatus(`Registration failed: ${data.error}`, 'error');
+                    incrementStats(false);
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'error');
+                incrementStats(false);
+            }
+        }
+
+        async function loginUser() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            if (!email || !password) {
+                showStatus('Please fill in email and password', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    authToken = data.token;
+                    currentUser = data.user;
+                    localStorage.setItem('authToken', authToken);
+                    showToken();
+                    showStatus(`Login successful! Welcome back ${data.user.username}`, 'success');
+                    incrementStats(true);
+                } else {
+                    showStatus(`Login failed: ${data.error}`, 'error');
+                    incrementStats(false);
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'error');
+                incrementStats(false);
+            }
+        }
+
+        async function getProfile() {
+            if (!authToken) {
+                showStatus('Please login first', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showStatus(`Profile: ${data.username} (${data.email})`, 'success');
+                    incrementStats(true);
+                } else {
+                    showStatus(`Failed to get profile: ${data.error}`, 'error');
+                    incrementStats(false);
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'error');
+                incrementStats(false);
+            }
+        }
+
+        // Task management functions
+        async function createTask() {
+            if (!authToken) {
+                showStatus('Please login first', 'error');
+                return;
+            }
+
+            const title = document.getElementById('task-title').value;
+            if (!title.trim()) {
+                showStatus('Please enter a task title', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/tasks`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ title: title.trim() })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showStatus(`Task created: ${data.title}`, 'success');
+                    document.getElementById('task-title').value = '';
+                    incrementStats(true);
+                    stats.tasks++;
+                    updateStats();
+                    getTasks(); // Refresh task list
+                } else {
+                    showStatus(`Failed to create task: ${data.error}`, 'error');
+                    incrementStats(false);
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'error');
+                incrementStats(false);
+            }
+        }
+
+        async function getTasks() {
+            if (!authToken) {
+                showStatus('Please login first', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/tasks`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displayTasks(data);
+                    stats.tasks = data.length;
+                    updateStats();
+                    showStatus(`Retrieved ${data.length} tasks`, 'success');
+                    incrementStats(true);
+                } else {
+                    showStatus(`Failed to get tasks: ${data.error}`, 'error');
+                    incrementStats(false);
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'error');
+                incrementStats(false);
+            }
+        }
+
+        function displayTasks(tasks) {
+            const tasksList = document.getElementById('tasks-list');
+            
+            if (tasks.length === 0) {
+                tasksList.innerHTML = '<p style="text-align: center; color: #7f8c8d;">No tasks found. Create some tasks to get started!</p>';
+                return;
+            }
+
+            tasksList.innerHTML = '';
+            tasks.forEach(task => {
+                const taskDiv = document.createElement('div');
+                taskDiv.className = 'task-item';
+                taskDiv.innerHTML = `
+                    <div class="task-info">
+                        <div class="task-title">${task.title}</div>
+                        <div class="task-status">
+                            Status: ${task.completed ? '✅ Completed' : '⏳ Pending'} | 
+                            Created: ${new Date(task.createdAt).toLocaleString()}
+                        </div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="btn btn-sm btn-warning" onclick="toggleTask('${task._id}', ${!task.completed})">
+                            ${task.completed ? '⏳ Mark Pending' : '✅ Mark Complete'}
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteTask('${task._id}')">🗑️ Delete</button>
+                    </div>
+                `;
+                tasksList.appendChild(taskDiv);
+            });
+        }
+
+        async function toggleTask(taskId, completed) {
+            if (!authToken) {
+                showStatus('Please login first', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/tasks/${taskId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ completed })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showStatus(`Task ${completed ? 'completed' : 'marked pending'}`, 'success');
+                    incrementStats(true);
+                    getTasks(); // Refresh task list
+                } else {
+                    showStatus(`Failed to update task: ${data.error}`, 'error');
+                    incrementStats(false);
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'error');
+                incrementStats(false);
+            }
+        }
+
+        async function deleteTask(taskId) {
+            if (!authToken) {
+                showStatus('Please login first', 'error');
+                return;
+            }
+
+            if (!confirm('Are you sure you want to delete this task?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/tasks/${taskId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showStatus('Task deleted successfully', 'success');
+                    incrementStats(true);
+                    stats.tasks = Math.max(0, stats.tasks - 1);
+                    updateStats();
+                    getTasks(); // Refresh task list
+                } else {
+                    showStatus(`Failed to delete task: ${data.error}`, 'error');
+                    incrementStats(false);
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'error');
+                incrementStats(false);
+            }
+        }
+
+        async function clearTasks() {
+            if (!authToken) {
+                showStatus('Please login first', 'error');
+                return;
+            }
+
+            if (!confirm('Are you sure you want to delete ALL tasks? This cannot be undone!')) {
+                return;
+            }
+
+            try {
+                // Get all tasks first
+                const getResponse = await fetch(`${API_BASE_URL}/tasks`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                const tasks = await getResponse.json();
+                
+                if (getResponse.ok && tasks.length > 0) {
+                    // Delete each task
+                    let deletedCount = 0;
+                    for (const task of tasks) {
+                        const deleteResponse = await fetch(`${API_BASE_URL}/tasks/${task._id}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Authorization': `Bearer ${authToken}`
+                            }
+                        });
+                        
+                        if (deleteResponse.ok) {
+                            deletedCount++;
+                        }
+                    }
+                    
+                    showStatus(`Deleted ${deletedCount} tasks`, 'success');
+                    stats.tasks = 0;
+                    updateStats();
+                    getTasks(); // Refresh task list
+                } else {
+                    showStatus('No tasks to delete', 'info');
+                }
+                
+                incrementStats(true);
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'error');
+                incrementStats(false);
+            }
+        }
+
+        // API testing function
+        async function testEndpoint() {
+            const url = document.getElementById('endpoint-url').value;
+            const method = document.getElementById('request-method').value;
+            const body = document.getElementById('request-body').value;
+
+            if (!url) {
+                showStatus('Please enter an endpoint URL', 'error');
+                return;
+            }
+
+            const fullUrl = url.startsWith('http') ? url : `${SERVER_URL}${url}`;
+            const options = {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+
+            // Add authorization header if we have a token
+            if (authToken) {
+                options.headers['Authorization'] = `Bearer ${authToken}`;
+            }
+
+            // Add body for POST/PUT requests
+            if ((method === 'POST' || method === 'PUT') && body.trim()) {
+                try {
+                    options.body = body;
+                } catch (error) {
+                    showStatus('Invalid JSON in request body', 'error');
+                    return;
+                }
+            }
+
+            try {
+                const response = await fetch(fullUrl, options);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showStatus(`✅ ${method} ${url} - Success (${response.status})`, 'success');
+                    incrementStats(true);
+                } else {
+                    showStatus(`❌ ${method} ${url} - Error ${response.status}: ${data.error || data.message}`, 'error');
+                    incrementStats(false);
+                }
+                
+                // Show response data
+                showStatus(`Response: ${JSON.stringify(data, null, 2)}`, 'info');
+            } catch (error) {
+                showStatus(`❌ ${method} ${url} - Network Error: ${error.message}`, 'error');
+                incrementStats(false);
+            }
+        }
+
+        // Check server status on page load
+        async function checkServerStatus() {
+            try {
+                const response = await fetch(SERVER_URL);
+                if (response.ok) {
+                    showStatus('✅ Backend server is running and accessible', 'success');
+                } else {
+                    showStatus('⚠️ Backend server responded with an error', 'error');
+                }
+            } catch (error) {
+                showStatus('❌ Cannot connect to backend server. Make sure it\'s running on port 5000', 'error');
+            }
+        }
+
+        // Check server status when page loads
+        window.addEventListener('load', checkServerStatus);
+    </script>
+</body>
+</html>

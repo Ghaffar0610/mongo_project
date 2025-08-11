@@ -1,0 +1,290 @@
+/* Task Item Styles */
+.task-item {
+  background: var(--bg-primary);
+  padding: 1.5rem;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  transition: all 0.3s ease;
+  animation: slideInRight 0.6s ease-out both;
+  position: relative;
+  overflow: hidden;
+}
+
+.task-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--gradient-primary);
+  transform: scaleY(0);
+  transition: transform 0.3s ease;
+}
+
+.task-item:hover::before {
+  transform: scaleY(1);
+}
+
+.task-item:hover {
+  transform: translateX(8px);
+  box-shadow: var(--shadow-lg);
+}
+
+.task-item.completed {
+  opacity: 0.8;
+  background: var(--bg-secondary);
+}
+
+.task-item.completed .task-title {
+  text-decoration: line-through;
+  color: var(--text-secondary);
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Task Status Toggle */
+.task-status-toggle {
+  flex-shrink: 0;
+}
+
+.status-toggle-btn {
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--border-color);
+  border-radius: 50%;
+  background: var(--bg-primary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.status-toggle-btn:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-md);
+}
+
+.status-toggle-btn.completed {
+  border-color: var(--success-color);
+  background: var(--success-color);
+  color: white;
+}
+
+.status-toggle-btn:not(.completed):hover {
+  border-color: var(--primary-color);
+  background: var(--primary-color);
+  color: white;
+}
+
+/* Task Content */
+.task-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.task-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.task-title {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 1.125rem;
+  margin: 0;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.task-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.task-date {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.task-status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.task-status.pending {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--warning-color);
+}
+
+.task-status.completed {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success-color);
+}
+
+/* Edit Form */
+.edit-form {
+  width: 100%;
+}
+
+.edit-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--primary-color);
+  border-radius: 12px;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.edit-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.edit-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* Task Actions */
+.task-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .task-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    padding: 1.25rem;
+  }
+
+  .task-item:hover {
+    transform: translateY(-4px);
+  }
+
+  .task-status-toggle {
+    align-self: center;
+  }
+
+  .status-toggle-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .task-actions {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .edit-actions {
+    justify-content: center;
+  }
+
+  .task-meta {
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .task-item {
+    padding: 1rem;
+  }
+
+  .task-title {
+    font-size: 1rem;
+  }
+
+  .task-meta {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .task-actions {
+    flex-direction: column;
+  }
+
+  .edit-actions {
+    flex-direction: column;
+  }
+}
+
+/* Animation for completed tasks */
+.task-item.completed {
+  animation: completeTask 0.5s ease-out;
+}
+
+@keyframes completeTask {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Hover effects for buttons */
+.task-actions .btn:hover {
+  transform: translateY(-2px);
+}
+
+.status-toggle-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Focus states for accessibility */
+.status-toggle-btn:focus,
+.edit-input:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Loading state for edit form */
+.edit-form .btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Smooth transitions */
+.task-item * {
+  transition: all 0.3s ease;
+}
+
+/* Custom scrollbar for long task titles */
+.task-content {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
