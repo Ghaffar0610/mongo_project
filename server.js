@@ -12,10 +12,23 @@ connectDB();
 // Initialize Express app
 const app = express();
 
-// CORS configuration - Allow all origins for testing
+// CORS configuration - Production ready
+const allowedOrigins = process.env.ALLOWED_ORIGINS 
+  ? process.env.ALLOWED_ORIGINS.split(',') 
+  : ['http://localhost:3000', 'http://localhost:3002'];
+
 app.use(cors({
-  origin: '*', // Allow all origins for testing
-  credentials: false, // Disable credentials for now
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));

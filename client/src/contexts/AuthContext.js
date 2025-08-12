@@ -15,7 +15,8 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [loading, setLoading] = useState(true);
 
-  const API_BASE_URL = 'http://localhost:5000/api';
+  // Use environment variable for API URL, fallback to localhost for development
+  const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
   useEffect(() => {
     if (token) {
